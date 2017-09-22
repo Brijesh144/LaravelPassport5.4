@@ -6,9 +6,15 @@ use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\RoleScope_model;
 
 class AuthServiceProvider extends ServiceProvider
 {
+
+    private $RoleScope_model;
+    public function __construct(){
+        $this->RoleScope_model = new RoleScope_model;
+    }
     /**
      * The policy mappings for the application.
      *
@@ -27,10 +33,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::tokensCan([
-            'manage-order' => 'Place orders',
-            'read-only-order' => 'Check order status',
-        ]);
+        $scope = $this->RoleScope_model->getScope();
+        
+        Passport::tokensCan($scope);
 
         Passport::routes();
 
