@@ -1,14 +1,20 @@
 <?php
 
-namespace App;
+namespace App\Models\BaseModels;
 
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use  HasApiTokens, Notifiable;
+    use HasApiTokens, SoftDeletes, Notifiable;
+
+
+    protected $table = 'tbl_users';
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'phone', 'firstname', 'password', 'username',
     ];
 
     /**
@@ -25,15 +31,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
     ];
 
-    public function findForPassport($username) {
-        if(is_numeric($username)){
-            $cond = ['mobile'=>$username];
-        }else{
-            $cond = ['email'=>$username];
-        }
-        return $this->where($cond)->first();
-    }
+    protected $dates = ['deleted_at'];
+
 }

@@ -27,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Passport::tokensCan([
+            'manage-order' => 'Place orders',
+            'read-only-order' => 'Check order status',
+        ]);
+
         Passport::routes();
 
         Passport::tokensExpireIn(Carbon::now()->addMinutes(15));
